@@ -69,6 +69,13 @@ Lo que sigue (danza de la abeja, abeja nativa, trashumancia, ranking) está en
 
 ## Peligros del Caldenal
 
+Guía visual completa con capturas anotadas: [`docs/GUIA-VISUAL.md`](docs/GUIA-VISUAL.md).
+Dentro del juego, `H` abre la misma leyenda.
+
+<p align="center">
+  <img src="docs/screenshots/leyenda-v0.2.png" alt="Leyenda del juego (tecla H)" width="70%">
+</p>
+
 | Peligro | Qué te hace | Cómo lo manejás |
 |---|---|---|
 | Energía agotada | La abeja no puede seguir | Volvé seguido a la colmena a "comer" |
@@ -102,8 +109,11 @@ python -m src.main
 | Tecla | Acción |
 |---|---|
 | ← ↑ → ↓  /  W A S D | Mover la abeja |
+| `H` | Abrir/cerrar la ayuda (**qué es cada cosa**) |
 | `R` | Reiniciar la ronda |
 | `ESC` | Salir |
+
+La ronda arranca en la pantalla de ayuda; con `H` la cerrás y empezás a jugar.
 
 ## Cómo se juega
 
@@ -136,11 +146,13 @@ abejas-pampa/
 │   ├── scenes/
 │   │   └── game_scene.py       # una ronda completa
 │   ├── UI/
-│   │   └── hud.py              # HUD, brújula y cartel final
+│   │   ├── hud.py              # HUD, brújula y cartel final
+│   │   └── leyenda.py          # pantalla de ayuda (tecla H)
 │   └── service/                # (reservado: audio, persistencia)
 ├── docs/
 │   ├── INFO-ABEJAS-LA-PAMPA.md   # investigación de respaldo
 │   ├── AMENAZAS-Y-MECANICAS.md   # amenazas reales → mecánicas
+│   ├── GUIA-VISUAL.md            # qué es cada cosa en pantalla
 │   ├── documento-diseno.md       # diseño del juego
 │   ├── ARQUITECTURA.md           # cómo está armado el código
 │   ├── ROADMAP.md                # fases de complejidad

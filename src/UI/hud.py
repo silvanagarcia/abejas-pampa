@@ -77,6 +77,14 @@ class HUD:
             pygame.draw.line(sup, config.COLMENA_COLOR, (cx, cy), (cx + p.x, cy + p.y), 4)
             pygame.draw.circle(sup, config.COLMENA_COLOR, (int(cx + p.x), int(cy + p.y)), 4)
 
+    def pista_ayuda(self, sup):
+        t = self.fuente.render("H = ¿qué es cada cosa?", True, (255, 255, 255))
+        fondo = t.get_rect(bottomleft=(10, config.ALTO - 8)).inflate(10, 6)
+        capa = pygame.Surface(fondo.size, pygame.SRCALPHA)
+        capa.fill((0, 0, 0, 120))
+        sup.blit(capa, fondo.topleft)
+        sup.blit(t, t.get_rect(bottomleft=(15, config.ALTO - 11)))
+
     def cartel_final(self, sup, colmena, miel_final, motivo):
         capa = pygame.Surface((config.ANCHO, config.ALTO), pygame.SRCALPHA)
         capa.fill((0, 0, 0, 175))

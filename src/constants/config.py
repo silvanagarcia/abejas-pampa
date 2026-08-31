@@ -26,8 +26,8 @@ BARRA_LLENA = (255, 120, 60)
 BARRA_ENERGIA = (120, 220, 130)
 BARRA_ENERGIA_BAJA = (230, 90, 80)
 VARROA_COLOR = (150, 40, 40)
-CULTIVO_COLOR = (210, 200, 120)
-PESTICIDA_COLOR = (170, 120, 200)
+CULTIVO_COLOR = (205, 195, 110)
+PESTICIDA_COLOR = (185, 95, 205)
 AVISPA_COLOR = (240, 220, 90)
 AVE_COLOR = (90, 110, 130)
 SOMBRA_COLOR = (60, 70, 60)
@@ -79,7 +79,7 @@ NECTAR_A_MIEL = 0.7
 # "envenena" la colonia (penalización final). La nube de deriva causa un
 # efecto SUBLETAL: no mata, pero desorienta.
 CULTIVO_ANCHO = 150
-PESTICIDA_RADIO = 70
+PESTICIDA_RADIO = 56
 PESTICIDA_VELOCIDAD = 0.7      # px/frame, deriva lenta
 SUBLETAL_DURACION = 4.0        # segundos de desorientación
 # La flor tóxica del cultivo:

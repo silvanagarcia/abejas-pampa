@@ -11,6 +11,7 @@ from src.entities.colmena import Colmena
 from src.entities.enemigos import Ave, Avispa
 from src.entities.flor import generar_campo
 from src.UI.hud import HUD
+from src.UI.leyenda import Leyenda
 
 SEGUNDOS_GRACIA = 6.0   # tiempo para volver a la colmena tras quedarse sin energía
 
@@ -20,6 +21,7 @@ class GameScene:
 
     def __init__(self):
         self.hud = HUD()
+        self.leyenda = Leyenda()
         self.reiniciar()
 
     def reiniciar(self):
@@ -44,14 +46,19 @@ class GameScene:
         self.motivo = ""
         self.aviso = ""                 # texto efímero (robo, susto, etc.)
         self._aviso_t = 0.0
+        self.mostrar_leyenda = True     # arranca en la pantalla de ayuda
 
     # -- ciclo de vida ------------------------------------------------
     def manejar_evento(self, evento):
-        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_r:
+        if evento.type != pygame.KEYDOWN:
+            return
+        if evento.key == pygame.K_r:
             self.reiniciar()
+        elif evento.key == pygame.K_h:
+            self.mostrar_leyenda = not self.mostrar_leyenda
 
     def actualizar(self, dt):
-        if self.terminado:
+        if self.terminado or self.mostrar_leyenda:
             return
 
         self.tiempo_restante -= dt
@@ -92,7 +99,10 @@ class GameScene:
         self.hud.dibujar(sup, self.abeja, self.colmena, self.tiempo_restante,
                          self.colmena_dir(), self.sequia, self.aviso,
                          self.sin_energia_t)
-        if self.terminado:
+        self.hud.pista_ayuda(sup)
+        if self.mostrar_leyenda:
+            self.leyenda.dibujar(sup)
+        elif self.terminado:
             self.hud.cartel_final(sup, self.colmena, self.miel_final(), self.motivo)
 
     # -- helpers de estado -----------------------------------------

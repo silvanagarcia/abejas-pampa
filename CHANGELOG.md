@@ -3,6 +3,23 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 El proyecto sigue [SemVer](https://semver.org/lang/es/).
 
+## [0.2.1] - 2026-08-31
+
+### Agregado
+
+- **Pantalla de ayuda / leyenda** (`src/UI/leyenda.py`): explica con íconos qué
+  es cada elemento en pantalla. Se abre al empezar la ronda y con la tecla `H`;
+  mientras está abierta el juego queda en pausa.
+- Pista permanente `H = ¿qué es cada cosa?` abajo a la izquierda.
+- `docs/GUIA-VISUAL.md`: guía con capturas anotadas de todos los elementos.
+
+### Cambiado
+
+- Las **nubes de pesticida** ahora se ven claramente: círculo violeta con
+  borde oscuro, motas y el cartel `PESTICIDA`. Antes se leían como "círculos
+  grises". Radio reducido (70 → 56).
+- La franja de cultivo lleva un rótulo vertical `CULTIVO`.
+
 ## [0.2.0] - 2026-08-31 — "Peligros del Caldenal"
 
 ### Agregado
