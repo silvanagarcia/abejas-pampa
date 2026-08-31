@@ -32,18 +32,21 @@ Regla: **la lógica no toca números mágicos**. Cualquier valor de balance
 Se usa **movimiento por tiempo** (`dt`), no por frame, así el juego corre
 igual a distintos FPS.
 
-## Contrato de escena
+## Contrato de escena y gestor
 
 Toda escena implementa:
 
-| Método | Para qué |
+| Método / atributo | Para qué |
 |---|---|
 | `manejar_evento(evento)` | eventos discretos (teclas presionadas una vez) |
 | `actualizar(dt)` | avanzar la simulación |
 | `dibujar(superficie)` | pintar el frame |
+| `proxima` | `None`, o la escena a la que pasar en el próximo frame |
 
-Cuando haya más de una pantalla (menú, game over, ranking) se agrega un
-gestor de escenas mínimo en `main.py` o en `scenes/`.
+`main.py` corre la escena actual y, cuando `escena.proxima` deja de ser `None`,
+la reemplaza. El flujo es **`IntroScene` → `GameScene` → `VentaScene` →
+`GameScene` → ...**. `GameScene._terminar()` arma el `resultado` (dict con
+miel bruta/neta, penalización, meta y éxito) y crea la `VentaScene`.
 
 ## Entidades
 

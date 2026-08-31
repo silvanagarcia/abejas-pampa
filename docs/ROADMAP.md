@@ -21,19 +21,21 @@ ronda de 90 s, reinicio.
 
 Detalle en [`AMENAZAS-Y-MECANICAS.md`](AMENAZAS-Y-MECANICAS.md).
 
-## 0.3 — Presentación
+## 0.3 — El objetivo del día ✅
 
-- Escena de **menú / inicio** y gestor de escenas.
+- **Gestor de escenas**: Inicio → Juego → Venta → Juego.
+- **Pantalla de inicio** con la explicación del objetivo y los controles.
+- **Objetivo** de la jornada: juntar X gramos de miel neta (`META_MIEL_G`).
+- **Pantalla de venta**: la cosecha del día servida en **tarritos de 30 g**,
+  con resumen y venta estimada.
+
+## 0.4 — Presentación y más peligros
+
 - **Sonido**: zumbido, sorbo, plop, ambiente.
 - Sprites/dibujo más cuidado; animación de la abeja según dirección.
-- Cartel de instrucciones.
 - Ciclo **día/noche**: de noche la abeja vuelve a la colmena.
-
-## 0.4 — Más peligros
-
 - **Sapo** apostado en la piquera de la colmena.
 - **Arañas / mantis** emboscadas en algunas flores.
-- Vidas o "abejas de la colonia" como intentos.
 - Salud de la colonia (nosemosis/virus) afectada por varroa y tóxico.
 
 ## 0.5 — Danza de la abeja

@@ -3,6 +3,31 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 El proyecto sigue [SemVer](https://semver.org/lang/es/).
 
+## [0.3.0] - 2026-08-31 — "El objetivo del día"
+
+### Agregado
+
+- **Gestor de escenas** en `src/main.py`: Inicio → Juego → Venta → Juego.
+  Cada escena expone `manejar_evento` / `actualizar` / `dibujar` / `proxima`.
+- **Pantalla de inicio** (`src/scenes/intro_scene.py`): título, explicación del
+  objetivo y de los peligros, controles. `ENTER`/`ESPACIO` para empezar.
+- **Objetivo de la jornada**: `config.META_MIEL_G` gramos de miel neta (120).
+  Al alcanzarlo, la jornada termina en éxito aunque quede tiempo.
+- **Pantalla de venta** (`src/scenes/venta_scene.py`): reparte la miel neta en
+  **tarritos de `GRAMOS_POR_TARRO` g** (30) dibujados, con resumen de miel
+  bruta, descuento por néctar contaminado, miel neta, cantidad de tarritos y
+  **venta estimada** (`PRECIO_TARRO`). Distingue jornada cumplida / se hizo de
+  noche. `ENTER` inicia una jornada nueva.
+- HUD: barra de avance **`miel del día: X / meta g`** en lugar del contador
+  suelto de miel.
+
+### Cambiado
+
+- Duración de la jornada 90 s → **120 s**.
+- `GameScene` ya no abre la leyenda automáticamente (la pantalla de inicio
+  explica el objetivo); `H` la sigue abriendo.
+- El cartel de fin de ronda del HUD se reemplazó por la pantalla de venta.
+
 ## [0.2.1] - 2026-08-31
 
 ### Agregado

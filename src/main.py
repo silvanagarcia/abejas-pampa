@@ -3,6 +3,10 @@
 Ejecutar desde la raíz del repo:
 
     python -m src.main
+
+Gestor de escenas mínimo: cada escena expone `manejar_evento`, `actualizar`,
+`dibujar` y un atributo `proxima` (None o la siguiente escena) para encadenar
+Inicio → Juego → Venta → Juego ...
 """
 
 import sys
@@ -10,7 +14,7 @@ import sys
 import pygame
 
 from src.constants import config
-from src.scenes.game_scene import GameScene
+from src.scenes.intro_scene import IntroScene
 
 
 def main():
@@ -19,11 +23,11 @@ def main():
     pantalla = pygame.display.set_mode((config.ANCHO, config.ALTO))
     reloj = pygame.time.Clock()
 
-    escena = GameScene()
+    escena = IntroScene()
 
     corriendo = True
     while corriendo:
-        dt = reloj.tick(config.FPS) / 1000.0  # segundos desde el frame anterior
+        dt = reloj.tick(config.FPS) / 1000.0
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -36,6 +40,9 @@ def main():
         escena.actualizar(dt)
         escena.dibujar(pantalla)
         pygame.display.flip()
+
+        if getattr(escena, "proxima", None) is not None:
+            escena = escena.proxima
 
     pygame.quit()
     sys.exit()

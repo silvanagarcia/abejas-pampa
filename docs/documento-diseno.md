@@ -43,7 +43,9 @@ volver a la colmena → producir miel*, contra un reloj.
 | Néctar caldén / chañar / piquillín / jarilla | 60 / 45 / 35 / 30 | por flor llena |
 | Recarga | 4 / 3 / 5 / 6 por s | las chicas se reponen más rápido |
 | Néctar → miel | ×0,7 | pérdida por deshidratación del néctar |
-| Duración de la ronda | 90 s | |
+| Duración de la jornada | 120 s | |
+| Meta del día | 120 g | miel neta para cerrar el día con éxito |
+| Gramos por tarrito | 30 g | unidad de venta |
 
 Tensión de diseño: las flores grandes (caldén) rinden más pero se recargan
 lento; las chicas (jarilla) son un goteo constante. El jugador arma su ruta.
@@ -55,17 +57,20 @@ lento; las chicas (jarilla) son un goteo constante. El jugador arma su ruta.
   v0.1). Abeja amarilla con rayas y alas que aletean.
 - Tipografía monoespaciada para el HUD.
 
-## Sonido (desde v0.2)
+## Sonido (planificado)
 
 - Zumbido de fondo que sube con la velocidad.
 - "Sorbo" corto al juntar néctar; "plop" al descargar en la colmena.
 - Ambiente: viento, chicharras.
 
-## Métrica de éxito de una partida
+## Objetivo y cierre del día (v0.3)
 
-Gramos de miel al terminar la jornada. Más adelante: bonus por
-**biodiversidad** (visitar las 4 especies) y por **polinización** (flores
-distintas tocadas).
+- **Objetivo:** cosechar `META_MIEL_G` g de miel neta (120) antes de que se
+  haga de noche (120 s). Al lograrlo, la jornada termina en éxito.
+- **Cierre:** la miel neta se reparte en tarritos de `GRAMOS_POR_TARRO` g (30),
+  se muestra el resumen y una venta estimada (`PRECIO_TARRO`).
+- Más adelante: metas crecientes por día, bonus por **biodiversidad** (visitar
+  las 4 especies) y por **polinización** (flores distintas tocadas).
 
 ## Fuera de alcance por ahora
 

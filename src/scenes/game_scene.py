@@ -40,13 +40,15 @@ class GameScene:
                 f.regen *= 0.5
 
         self.tiempo_restante = config.DURACION_RONDA
+        self.meta = config.META_MIEL_G
         self.miel_toxica = 0.0          # néctar tóxico ya descargado
         self.sin_energia_t = 0.0
         self.terminado = False
         self.motivo = ""
         self.aviso = ""                 # texto efímero (robo, susto, etc.)
         self._aviso_t = 0.0
-        self.mostrar_leyenda = True     # arranca en la pantalla de ayuda
+        self.mostrar_leyenda = False    # se abre con H
+        self.proxima = None             # escena siguiente (venta)
 
     # -- ciclo de vida ------------------------------------------------
     def manejar_evento(self, evento):
@@ -96,14 +98,12 @@ class GameScene:
         self.abeja.dibujar(sup)
 
         self.viento.dibujar(sup, self.hud.fuente)
-        self.hud.dibujar(sup, self.abeja, self.colmena, self.tiempo_restante,
-                         self.colmena_dir(), self.sequia, self.aviso,
-                         self.sin_energia_t)
+        self.hud.dibujar(sup, self.abeja, self.miel_final(), self.meta,
+                         self.tiempo_restante, self.colmena_dir(), self.sequia,
+                         self.aviso, self.sin_energia_t)
         self.hud.pista_ayuda(sup)
         if self.mostrar_leyenda:
             self.leyenda.dibujar(sup)
-        elif self.terminado:
-            self.hud.cartel_final(sup, self.colmena, self.miel_final(), self.motivo)
 
     # -- helpers de estado -----------------------------------------
     def colmena_dir(self):
@@ -154,6 +154,8 @@ class GameScene:
             total, toxico = self.abeja.descargar()
             self.colmena.recibir(total)
             self.miel_toxica += toxico
+            if self.miel_final() >= self.meta:
+                self._terminar("¡Alcanzaste la meta del día!")
 
     def _enemigos(self, dt):
         # Aparición de chaquetas amarillas: sobre todo en el "otoño" de la ronda
@@ -182,8 +184,21 @@ class GameScene:
             self.sin_energia_t = 0.0
 
     def _terminar(self, motivo):
+        if self.terminado:
+            return
         self.terminado = True
         self.motivo = motivo
+        neta = self.miel_final()
+        resultado = {
+            "miel_bruta": self.colmena.miel,
+            "penal": self.colmena.miel - neta,
+            "miel_neta": neta,
+            "meta": self.meta,
+            "exito": neta >= self.meta,
+            "motivo": motivo,
+        }
+        from src.scenes.venta_scene import VentaScene
+        self.proxima = VentaScene(resultado)
 
     def _flash(self, texto):
         self.aviso = texto

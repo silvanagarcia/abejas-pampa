@@ -2,7 +2,7 @@
 
 Dentro del juego, la tecla **`H`** abre esta misma leyenda (y pausa la ronda).
 
-![Pantalla de juego](screenshots/juego-v0.2.png)
+![Pantalla de juego](screenshots/juego-v0.3.png)
 
 ## El escenario
 
@@ -42,17 +42,25 @@ Dentro del juego, la tecla **`H`** abre esta misma leyenda (y pausa la ronda).
   - barra **néctar**: cuánto llevás en el buche (cuando dice `¡LLENA!`, volvé a la colmena);
   - barra **energía**: baja mientras volás, se repone en la colmena;
   - barra **varroa**: aparece cuando empezás a acumular ácaros.
-- **Arriba al centro:** miel acumulada en la colmena.
-- **Arriba a la derecha:** tiempo restante de la ronda y, si corresponde, `SEQUÍA`.
+- **Arriba al centro:** barra **`miel del día: X / 120 g`** — tu avance hacia
+  el objetivo. Cuando se llena, la jornada termina en éxito.
+- **Arriba a la derecha:** tiempo restante de la jornada y, si corresponde, `SEQUÍA`.
 - **Abajo a la derecha:** **brújula**. La flecha marrón apunta a la colmena; si ves `?`, estás desorientada por el pesticida.
 - **Abajo a la izquierda:** recordatorio `H = ¿qué es cada cosa?`.
 - **Banda central:** avisos efímeros (te robaron néctar, soltaste la carga, etc.).
 
-## Pantalla final
+## Pantalla de inicio
 
-Al terminar la jornada se muestra: el motivo, la **miel cosechada** bruta, el
-**descuento por néctar contaminado** (si lo hubo) y la **cosecha neta** en grande.
-`R` para jugar otra vez.
+Antes de jugar. Explica el objetivo del día (juntar 120 g de miel) y los
+peligros. `ENTER` para empezar.
+
+## Pantalla de venta (cierre del día)
+
+Al alcanzar la meta —o al terminar el tiempo— la cosecha se sirve en
+**tarritos de 30 g** dibujados. El recuadro muestra la miel bruta, el
+**descuento por néctar contaminado** (si lo hubo), la miel neta, cuántos
+tarritos salieron (y cuántos gramos sobran) y la **venta estimada** en pesos.
+`ENTER` arranca una jornada nueva.
 
 ---
 

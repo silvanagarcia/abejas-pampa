@@ -102,5 +102,14 @@ AVE_VELOCIDAD = 7.5
 AVE_AVISO = 1.1              # segundos de sombra antes de la pasada
 AVE_CADA = (8, 15)          # segundos entre pasadas
 
-# --- Ronda ---
-DURACION_RONDA = 90           # segundos
+# --- Ronda / objetivo ---
+DURACION_RONDA = 120          # segundos de jornada
+META_MIEL_G = 120             # gramos de miel neta a cosechar en el día
+GRAMOS_POR_TARRO = 30         # cada tarrito de venta lleva estos gramos
+PRECIO_TARRO = 1800           # $ por tarrito (para la pantalla de venta)
+
+# Colores de la pantalla de venta
+TARRO_VIDRIO = (250, 235, 180)
+TARRO_MIEL = (230, 170, 40)
+TARRO_TAPA = (150, 110, 60)
+BARRA_META = (255, 190, 70)

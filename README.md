@@ -7,10 +7,11 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![Pygame](https://img.shields.io/badge/Pygame--CE-2.5-green)
 ![Licencia](https://img.shields.io/badge/Licencia-MIT-yellow)
-![Estado](https://img.shields.io/badge/versi%C3%B3n-0.2.0-orange)
+![Estado](https://img.shields.io/badge/versi%C3%B3n-0.3.0-orange)
 
 <p align="center">
-  <img src="docs/screenshots/juego-v0.2.png" alt="Abejas de la Pampa — v0.2" width="70%">
+  <img src="docs/screenshots/inicio-v0.3.png" alt="Pantalla de inicio" width="49%">
+  <img src="docs/screenshots/venta-v0.3.png" alt="Cierre del día: la cosecha en tarritos" width="49%">
 </p>
 
 ---
@@ -18,7 +19,8 @@
 ## Índice
 
 - [Descripción](#descripción)
-- [Estado actual (v0.2.0)](#estado-actual-v020)
+- [Estado actual (v0.3.0)](#estado-actual-v030)
+- [El objetivo del día](#el-objetivo-del-día)
 - [Peligros del Caldenal](#peligros-del-caldenal)
 - [Requisitos](#requisitos)
 - [Instalación y ejecución](#instalación-y-ejecución)
@@ -38,15 +40,29 @@ Controlás una **abeja pecoreadora**. El mapa es un recorte del **Monte
 pampeano** con flores de **caldén, chañar, piquillín y jarilla**. Cada especie
 da distinta cantidad de néctar y se recarga a distinto ritmo. Juntás néctar
 hasta llenar el buche y volvés a la **colmena**, donde se transforma en miel.
-La ronda dura 90 segundos: la meta es cosechar la mayor cantidad de miel.
+La jornada dura 120 segundos y tiene un **objetivo**: cosechar una cantidad de
+gramos de miel. Al cumplirlo, el día cierra y la cosecha se sirve en
+**tarritos listos para la venta**.
 
 Toda la información biológica y regional que sustenta el juego está en
 [`docs/INFO-ABEJAS-LA-PAMPA.md`](docs/INFO-ABEJAS-LA-PAMPA.md).
 
-## Estado actual (v0.2.0)
+## Estado actual (v0.3.0)
 
-**"Peligros del Caldenal".** Sobre el MVP (mover, pecorear, descargar, HUD,
-ronda de 90 s) se agregó todo lo que le complica la vida a una abeja real:
+El juego ya tiene su ciclo completo: **pantalla de inicio → jornada →
+pantalla de venta → nueva jornada**.
+
+- **Pantalla de inicio** con la explicación del objetivo y los controles.
+- **Objetivo del día**: cosechar `META_MIEL_G` gramos de miel neta (120 por
+  defecto). El HUD muestra el avance con una barra `miel del día: X / 120 g`.
+- Al alcanzar la meta (o al terminar el tiempo), pasás a la **pantalla de
+  venta**: la miel neta se reparte en **tarritos de 30 g** dibujados, con
+  resumen de gramos, tarritos y **venta estimada** en pesos.
+- `ENTER` en esa pantalla arranca una **nueva jornada**.
+
+### Peligros (desde v0.2)
+
+Sobre el MVP se agregó todo lo que le complica la vida a una abeja real:
 
 - **Energía / vida útil**: se agota volando; se recupera algo al descargar en
   la colmena. Si llega a 0, hay 6 s para volver o termina la jornada.
@@ -64,8 +80,20 @@ ronda de 90 s) se agregó todo lo que le complica la vida a una abeja real:
 
 Cada mecánica sale de una amenaza documentada: ver
 [`docs/AMENAZAS-Y-MECANICAS.md`](docs/AMENAZAS-Y-MECANICAS.md).
-Lo que sigue (danza de la abeja, abeja nativa, trashumancia, ranking) está en
-[`docs/ROADMAP.md`](docs/ROADMAP.md).
+Lo que sigue (sonido, día/noche, danza de la abeja, abeja nativa, ranking)
+está en [`docs/ROADMAP.md`](docs/ROADMAP.md).
+
+## El objetivo del día
+
+- **Meta:** juntar **120 g de miel neta** y llevarla a la colmena antes de que
+  se haga de noche (120 s).
+- La miel **neta** descuenta la penalización por néctar contaminado del cultivo.
+- Cuando la barra del HUD se llena, la jornada termina en éxito y ves tu
+  cosecha **en tarritos** (30 g cada uno) con la venta estimada.
+- Si se acaba el tiempo sin llegar, la pantalla de venta te muestra lo poco que
+  juntaste y te invita a probar de nuevo (`ENTER`).
+- La meta se ajusta en `META_MIEL_G` dentro de
+  [`src/constants/config.py`](src/constants/config.py).
 
 ## Peligros del Caldenal
 
@@ -108,33 +136,35 @@ python -m src.main
 
 | Tecla | Acción |
 |---|---|
+| `ENTER` / `ESPACIO` | Empezar (pantalla de inicio) · nueva jornada (pantalla de venta) |
 | ← ↑ → ↓  /  W A S D | Mover la abeja |
 | `H` | Abrir/cerrar la ayuda (**qué es cada cosa**) |
-| `R` | Reiniciar la ronda |
+| `R` | Reiniciar la jornada en curso |
 | `ESC` | Salir |
-
-La ronda arranca en la pantalla de ayuda; con `H` la cerrás y empezás a jugar.
 
 ## Cómo se juega
 
-1. Salís de la zona de la colmena y buscás flores **en el Monte** (evitá la
+1. En la **pantalla de inicio**, `ENTER` para empezar la jornada.
+2. Salís de la zona de la colmena y buscás flores **en el Monte** (evitá la
    franja de cultivo de la derecha).
-2. Te posás sobre una flor: el néctar pasa de la flor a tu buche.
-3. Cuando el buche está lleno (`¡LLENA!`), volvés a tocar la **colmena**. Ahí
-   también recuperás energía y bajás la varroa.
-4. El néctar descargado se convierte en miel (factor 0,7).
-5. Las flores se recargan solas: conviene rotar entre varias. La **jarilla**
-   además te limpia varroa.
-6. Cuidado con la **avispa** (te roba), el **benteveo** (te tira la carga) y
+3. Te posás sobre una flor: el néctar pasa de la flor a tu buche.
+4. Cuando el buche está lleno (`¡LLENA!`), volvés a tocar la **colmena**. Ahí
+   descargás, **recuperás energía** y **bajás la varroa**.
+5. El néctar descargado se convierte en miel (factor 0,7) y sube la barra
+   `miel del día`.
+6. Las flores se recargan solas: conviene rotar. La **jarilla** además te
+   limpia varroa.
+7. Cuidado con la **avispa** (te roba), el **benteveo** (te tira la carga) y
    las **nubes de pesticida** (te desorientan).
-7. A los 90 segundos termina la jornada y ves tu cosecha neta.
+8. Al llegar a los **120 g** (o al terminar el tiempo) pasás a la **pantalla
+   de venta**: tu cosecha en tarritos. `ENTER` para otra jornada.
 
 ## Estructura del proyecto
 
 ```
 abejas-pampa/
 ├── src/
-│   ├── main.py                 # bucle principal y manejo de eventos
+│   ├── main.py                 # bucle principal + gestor de escenas
 │   ├── constants/
 │   │   └── config.py           # todo el balance y los colores
 │   ├── entities/
@@ -144,9 +174,11 @@ abejas-pampa/
 │   │   ├── ambiente.py         # viento, cultivo, nubes de pesticida
 │   │   └── enemigos.py         # chaqueta amarilla y benteveo
 │   ├── scenes/
-│   │   └── game_scene.py       # una ronda completa
+│   │   ├── intro_scene.py      # pantalla de inicio (objetivo)
+│   │   ├── game_scene.py       # la jornada
+│   │   └── venta_scene.py      # cierre del día: cosecha en tarritos
 │   ├── UI/
-│   │   ├── hud.py              # HUD, brújula y cartel final
+│   │   ├── hud.py              # HUD: barras, meta, brújula, avisos
 │   │   └── leyenda.py          # pantalla de ayuda (tecla H)
 │   └── service/                # (reservado: audio, persistencia)
 ├── docs/
@@ -176,8 +208,8 @@ floración del **Caldenal** como sustento principal y una apicultura
 |---|---|
 | **0.1** ✅ | MVP: mover, pecorear, descargar, HUD, ronda por tiempo |
 | **0.2** ✅ | Peligros: energía, varroa, viento/sequía, chaqueta amarilla, benteveo, deriva de pesticida, néctar tóxico |
-| 0.3 | Menú, pantalla de inicio, sonido, día y noche |
-| 0.4 | Sapo en la piquera, arañas en flores, más pulido de predadores |
+| **0.3** ✅ | Ciclo completo: pantalla de inicio, objetivo del día en gramos, pantalla de venta con la cosecha en tarritos |
+| 0.4 | Sonido, ciclo día/noche, sapo en la piquera, arañas en flores |
 | 0.5 | Danza de la abeja: abejas ayudantes tras una buena carga |
 | 0.6 | Modo abeja nativa sin aguijón + puntaje de biodiversidad |
 | 0.7 | Temporadas / trashumancia: mover el apiario entre Monte y pradera |

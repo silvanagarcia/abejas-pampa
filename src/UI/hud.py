@@ -1,4 +1,4 @@
-"""Dibujo del HUD: néctar, energía, varroa, miel, tiempo, brújula y avisos."""
+"""Dibujo del HUD: néctar, energía, varroa, avance hacia la meta, tiempo..."""
 
 import pygame
 
@@ -8,7 +8,6 @@ from src.constants import config
 class HUD:
     def __init__(self):
         self.fuente = pygame.font.SysFont("consolas,menlo,monospace", 18)
-        self.fuente_grande = pygame.font.SysFont("consolas,menlo,monospace", 44, bold=True)
 
     # -- barra genérica ------------------------------------------------
     def _barra(self, sup, x, y, ancho, prop, color, etiqueta):
@@ -16,7 +15,7 @@ class HUD:
         pygame.draw.rect(sup, color, (x + 2, y + 2, int(ancho * max(0, min(1, prop))), 12))
         sup.blit(self.fuente.render(etiqueta, True, config.BLANCO), (x + ancho + 12, y - 1))
 
-    def dibujar(self, sup, abeja, colmena, tiempo_restante, colmena_dir,
+    def dibujar(self, sup, abeja, miel_neta, meta, tiempo_restante, colmena_dir,
                 sequia, aviso, sin_energia_t):
         franja = pygame.Surface((config.ANCHO, 70), pygame.SRCALPHA)
         franja.fill((0, 0, 0, 140))
@@ -36,9 +35,14 @@ class HUD:
         if abeja.varroa > 1:
             self._barra(sup, 12, 48, 150, abeja.varroa_prop, config.VARROA_COLOR, "varroa")
 
-        # Miel
-        sup.blit(self.fuente.render(f"miel: {colmena.miel:6.1f} g", True, config.BLANCO),
-                 (config.ANCHO // 2 - 55, 10))
+        # Avance hacia la meta del día
+        cx = config.ANCHO // 2
+        bx, bw = cx - 140, 300
+        sup.blit(self.fuente.render(f"miel del día:  {miel_neta:.0f} / {meta:.0f} g",
+                                    True, config.BLANCO), (bx, 8))
+        pygame.draw.rect(sup, (255, 255, 255), (bx, 32, bw + 4, 16), 2)
+        prop = max(0.0, min(1.0, miel_neta / meta)) if meta else 0.0
+        pygame.draw.rect(sup, config.BARRA_META, (bx + 2, 34, int(bw * prop), 12))
 
         # Tiempo + sequía
         seg = max(0, int(tiempo_restante))
@@ -84,29 +88,3 @@ class HUD:
         capa.fill((0, 0, 0, 120))
         sup.blit(capa, fondo.topleft)
         sup.blit(t, t.get_rect(bottomleft=(15, config.ALTO - 11)))
-
-    def cartel_final(self, sup, colmena, miel_final, motivo):
-        capa = pygame.Surface((config.ANCHO, config.ALTO), pygame.SRCALPHA)
-        capa.fill((0, 0, 0, 175))
-        sup.blit(capa, (0, 0))
-        cx = config.ANCHO // 2
-
-        titulo = self.fuente_grande.render("Fin de la jornada", True, config.BLANCO)
-        sup.blit(titulo, titulo.get_rect(center=(cx, config.ALTO // 2 - 80)))
-
-        sup.blit(self.fuente.render(motivo, True, (230, 200, 160)),
-                 self.fuente.render(motivo, True, (230, 200, 160)).get_rect(center=(cx, config.ALTO // 2 - 40)))
-
-        bruto = self.fuente.render(f"miel cosechada: {colmena.miel:.1f} g", True, config.BLANCO)
-        sup.blit(bruto, bruto.get_rect(center=(cx, config.ALTO // 2 - 6)))
-
-        penal = colmena.miel - miel_final
-        if penal > 0.05:
-            p = self.fuente.render(f"− {penal:.1f} g por néctar contaminado", True, (220, 150, 210))
-            sup.blit(p, p.get_rect(center=(cx, config.ALTO // 2 + 18)))
-
-        neto = self.fuente_grande.render(f"{miel_final:.1f} g", True, config.BARRA_NECTAR)
-        sup.blit(neto, neto.get_rect(center=(cx, config.ALTO // 2 + 58)))
-
-        ayuda = self.fuente.render("R para jugar de nuevo   ·   ESC para salir", True, config.BLANCO)
-        sup.blit(ayuda, ayuda.get_rect(center=(cx, config.ALTO // 2 + 100)))
