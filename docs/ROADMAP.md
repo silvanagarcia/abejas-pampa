@@ -7,26 +7,34 @@ Cada fase agrega **un** sistema nuevo sobre un juego que ya funciona.
 Mover la abeja, pecorear flores nativas, descargar en la colmena, HUD,
 ronda de 90 s, reinicio.
 
-## 0.2 — Presentación
+## 0.2 — Peligros del Caldenal ✅
+
+- **Energía / vida útil** de la abeja; se recupera en la colmena.
+- **Varroa**: se acumula volando, penaliza velocidad y capacidad; se limpia
+  en la colmena y en la jarilla.
+- **Chaqueta amarilla**: persigue a la abeja cargada y le roba néctar.
+- **Benteveo**: pasadas con sombra de aviso; hace soltar la carga.
+- **Deriva de pesticida** en la franja de cultivo: efecto subletal
+  (desorientación + brújula apagada).
+- **Néctar tóxico** de las flores del cultivo: penaliza el total.
+- **Viento** y rondas con **sequía**.
+
+Detalle en [`AMENAZAS-Y-MECANICAS.md`](AMENAZAS-Y-MECANICAS.md).
+
+## 0.3 — Presentación
 
 - Escena de **menú / inicio** y gestor de escenas.
 - **Sonido**: zumbido, sorbo, plop, ambiente.
 - Sprites/dibujo más cuidado; animación de la abeja según dirección.
 - Cartel de instrucciones.
+- Ciclo **día/noche**: de noche la abeja vuelve a la colmena.
 
-## 0.3 — La abeja como ser vivo
+## 0.4 — Más peligros
 
-- **Energía** que baja al volar y se recupera al comer néctar; si llega a 0
-  la abeja "descansa" unos segundos.
-- **Viento** pampeano: empuja la abeja, cambia de dirección cada tanto.
-- Ciclo **día/noche**: de noche la abeja no pecorea (vuelve a la colmena).
-
-## 0.4 — Peligros
-
-- **Predadores**: pájaro (*p. ej.* abejaruco/benteveo) y **avispa** que
-  persiguen a la abeja cargada.
-- Zonas de **agroquímico** cerca de cultivos: bajan energía.
+- **Sapo** apostado en la piquera de la colmena.
+- **Arañas / mantis** emboscadas en algunas flores.
 - Vidas o "abejas de la colonia" como intentos.
+- Salud de la colonia (nosemosis/virus) afectada por varroa y tóxico.
 
 ## 0.5 — Danza de la abeja
 
@@ -53,7 +61,6 @@ ronda de 90 s, reinicio.
 
 ## Ideas sueltas (sin fase)
 
-- Clima: sequía que reduce néctar y recarga.
 - Propóleos: juntar resina de jarilla para "reparar" la colmena.
 - Modo educativo con fichas de cada especie.
 - Empaquetado con PyInstaller (`build/`).

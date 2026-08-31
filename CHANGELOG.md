@@ -3,6 +3,39 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 El proyecto sigue [SemVer](https://semver.org/lang/es/).
 
+## [0.2.0] - 2026-08-31 — "Peligros del Caldenal"
+
+### Agregado
+
+- **Energía / vida útil** de la abeja: se agota volando (más rápido en
+  movimiento), se recupera parcialmente al descargar en la colmena. A 0 hay
+  6 s de gracia para llegar a la colmena antes de terminar la jornada.
+- **Varroa destructor**: infestación que crece con el tiempo de vuelo y
+  penaliza velocidad (−40 % máx) y capacidad (−30 % máx). Se reduce al
+  descargar en la colmena y posándose en **jarilla**.
+- **Chaqueta amarilla** (`entities/enemigos.py::Avispa`): persigue a la abeja
+  cargada, le roba néctar por contacto y huye; aparece a partir del 45 % de la
+  ronda con frecuencia creciente.
+- **Benteveo** (`entities/enemigos.py::Ave`): pasadas horizontales con sombra
+  de aviso ~1 s antes; si engancha a la abeja le tira toda la carga.
+- **Cultivo y deriva de pesticida** (`entities/ambiente.py`): franja lateral
+  con nubes que derivan; el contacto causa efecto **subletal** (dirección
+  rotada + brújula a la colmena desactivada durante 4 s).
+- **Flores tóxicas** en el cultivo: suman miel pero restan en el balance
+  final (`PENAL_MIEL_TOXICA`).
+- **Viento** (`entities/ambiente.py::Viento`): empuje que cambia cada 5–11 s.
+- **Sequía**: modificador aleatorio de ronda (35 %) que baja la recarga de
+  todas las flores a la mitad y sube el viento.
+- **HUD** ampliado: barras de energía y varroa, brújula a la colmena,
+  indicador de viento, avisos efímeros, cartel final con cosecha neta.
+
+### Cambiado
+
+- `Abeja.mover()` ahora recibe el vector de viento; `Abeja.descargar()`
+  devuelve `(nectar_total, nectar_toxico)` y repone energía/higiene.
+- `flor.generar_flores()` → `flor.generar_campo()` (nativas + tóxicas).
+- Colmena reubicada más abajo para no solaparse con el HUD.
+
 ## [0.1.0] - 2026-08-31
 
 ### Agregado
