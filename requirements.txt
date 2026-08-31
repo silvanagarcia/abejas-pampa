@@ -1,0 +1,7 @@
+# Dependencias de ejecución de Abejas de la Pampa
+# Instalar con:  pip install -r requirements.txt
+
+pygame-ce>=2.5
+
+# --- Solo para generar el ejecutable (opcional) ---
+# pyinstaller>=6.0
