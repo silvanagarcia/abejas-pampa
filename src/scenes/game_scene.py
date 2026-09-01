@@ -37,21 +37,23 @@ class GameScene:
         self.abeja = Abeja(config.ANCHO // 2, config.ALTO // 2)
         self.cultivo = Cultivo()
         self.flores = generar_campo(self.colmena.rect.inflate(80, 80), self.cultivo.rect)
-        self.viento = Viento()
         self.avispas = []
         self.ave = Ave(factor_frecuencia=max(0.5, 1.0 - 0.15 * self.nivel_idx))
 
         # Dificultad creciente por nivel
         self.avispa_max = min(config.AVISPA_MAX + self.nivel_idx, 8)
-        self.avispa_desde = max(0.0, config.AVISPA_APARECE_DESDE - 0.12 * self.nivel_idx)
+        self.avispa_desde = max(0.0, config.AVISPA_APARECE_DESDE - 0.05 * self.nivel_idx)
 
         prob_sequia = min(0.85, 0.35 + 0.15 * self.nivel_idx)
         self.sequia = random.random() < prob_sequia
-        self.viento.factor = 1.0 + 0.25 * self.nivel_idx
+        viento_factor = 1.0 + 0.35 * self.nivel_idx
+        cambia_min = max(1.5, 3 - 0.4 * self.nivel_idx)
+        cambia_max = max(3.5, 7 - 0.8 * self.nivel_idx)
         if self.sequia:
-            self.viento.factor *= 1.8
+            viento_factor *= 1.8
             for f in self.flores:
                 f.regen *= 0.5
+        self.viento = Viento(factor=viento_factor, rango_cambio=(cambia_min, cambia_max))
 
         self.duracion_nivel = nivel["duracion"]
         self.tiempo_restante = nivel["duracion"]

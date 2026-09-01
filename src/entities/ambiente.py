@@ -41,13 +41,20 @@ class RachaVisual:
 
 
 class Viento:
-    """Ráfaga que empuja a la abeja y cambia de dirección cada tanto."""
+    """Ráfaga que empuja a la abeja y cambia de dirección cada tanto.
 
-    def __init__(self):
-        self.vector = pygame.Vector2(0, 0)
+    Arranca con una ráfaga ya activa (no en calma) para que se note desde
+    el primer segundo del nivel, no recién sobre el final.
+    """
+
+    def __init__(self, factor=1.0, rango_cambio=None):
+        self.factor = factor        # 1.0 normal; la sequía y el nivel lo suben
+        self.rango_cambio = rango_cambio or config.VIENTO_CAMBIA_CADA
+        fuerza = random.uniform(0, config.VIENTO_FUERZA_MAX) * self.factor
+        ang = random.uniform(0, 360)
+        self.vector = pygame.Vector2(fuerza, 0).rotate(ang)
         self._t = 0.0
-        self._proximo = random.uniform(*config.VIENTO_CAMBIA_CADA)
-        self.factor = 1.0        # 1.0 normal; la sequía lo sube
+        self._proximo = random.uniform(*self.rango_cambio)
         self.rachas = []
         self._spawn_t = 0.0
 
@@ -55,7 +62,7 @@ class Viento:
         self._t += dt
         if self._t >= self._proximo:
             self._t = 0.0
-            self._proximo = random.uniform(*config.VIENTO_CAMBIA_CADA)
+            self._proximo = random.uniform(*self.rango_cambio)
             fuerza = random.uniform(0, config.VIENTO_FUERZA_MAX) * self.factor
             ang = random.uniform(0, 360)
             self.vector = pygame.Vector2(fuerza, 0).rotate(ang)

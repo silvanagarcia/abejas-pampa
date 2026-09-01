@@ -55,8 +55,8 @@ pantalla de venta → nueva jornada**.
 
 - **Pantalla de inicio** con la explicación del objetivo y los controles.
 - **4 niveles** definidos en `NIVELES` (30 s y una meta creciente cada uno).
-  El HUD muestra el avance del nivel (`nivel 1/4: X / 45 g`) y el **acumulado
-  global** (`total del juego: X / 240 g`).
+  El HUD muestra el avance del nivel (`nivel 1/4: X / 70 g`) y el **acumulado
+  global** (`total del juego: X / 460 g`).
 - Al superar un nivel pasás a una pantalla breve de **checkpoint** con el
   acumulado, y seguís al siguiente nivel (más difícil: más avispas, viento
   y sequía) sin perder lo juntado.
@@ -98,7 +98,7 @@ está en [`docs/ROADMAP.md`](docs/ROADMAP.md).
 - La miel **neta** (descuenta la penalización por néctar contaminado del
   cultivo) que juntás en un nivel se **suma** a lo acumulado en los
   anteriores; nunca se pierde al pasar de nivel.
-- **Meta global:** juntar **240 g de miel neta** en total. Se gana apenas se
+- **Meta global:** juntar **460 g de miel neta** en total. Se gana apenas se
   llega a esa cifra, o al superar el último nivel.
 - Si se acaba el tiempo de un nivel sin llegar a su meta, la partida termina
   ahí; la pantalla de venta muestra lo acumulado hasta ese punto e invita a
@@ -171,7 +171,7 @@ python -m src.main
    pantalla) y más chance de sequía.
 8. Al llegar a la meta del nivel pasás a un **checkpoint** con el acumulado y
    seguís al siguiente. Al superar el último nivel (o llegar antes a los
-   **240 g** globales) ganás y pasás a la **pantalla de venta**: tu cosecha
+   **460 g** globales) ganás y pasás a la **pantalla de venta**: tu cosecha
    en tarritos. `ENTER` para otra partida.
 
 ## Estructura del proyecto

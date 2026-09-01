@@ -55,7 +55,7 @@ VARROA_PENAL_CAPACIDAD = 0.30
 
 # --- Viento pampeano ---
 VIENTO_FUERZA_MAX = 1.8        # px/frame de empuje
-VIENTO_CAMBIA_CADA = (5, 11)   # segundos: rango entre cambios de ráfaga
+VIENTO_CAMBIA_CADA = (3, 7)    # segundos: rango entre cambios de ráfaga
 
 # --- Flores ---
 # Especies nativas del Caldenal / Monte pampeano.
@@ -93,7 +93,7 @@ PENAL_MIEL_TOXICA = 0.5        # cada unidad de néctar tóxico resta esto en mi
 AVISPA_RADIO = 11
 AVISPA_VELOCIDAD = 3.4
 AVISPA_ROBO = 35              # néctar que arранca por contacto
-AVISPA_APARECE_DESDE = 0.45   # fracción de la ronda a partir de la cual salen
+AVISPA_APARECE_DESDE = 0.15   # fracción de la ronda a partir de la cual salen
 AVISPA_MAX = 4
 
 # --- Benteveo (ave insectívora) ---
@@ -107,12 +107,12 @@ AVE_CADA = (8, 15)          # segundos entre pasadas
 # para juntar su meta si se vuela sin perder el tiempo. La miel se va
 # acumulando de nivel en nivel hasta completar la meta global del juego.
 NIVELES = [
-    {"nombre": "Primavera", "duracion": 30, "meta": 45},
-    {"nombre": "Verano",    "duracion": 30, "meta": 55},
-    {"nombre": "Otoño",     "duracion": 30, "meta": 65},
-    {"nombre": "Invierno",  "duracion": 30, "meta": 75},
+    {"nombre": "Primavera", "duracion": 30, "meta": 70},
+    {"nombre": "Verano",    "duracion": 30, "meta": 100},
+    {"nombre": "Otoño",     "duracion": 30, "meta": 130},
+    {"nombre": "Invierno",  "duracion": 30, "meta": 160},
 ]
-META_GLOBAL_MIEL = sum(n["meta"] for n in NIVELES)   # 240 g para ganar el juego
+META_GLOBAL_MIEL = sum(n["meta"] for n in NIVELES)   # 460 g para ganar el juego
 GRAMOS_POR_TARRO = 30         # cada tarrito de venta lleva estos gramos
 PRECIO_TARRO = 1800           # $ por tarrito (para la pantalla de venta)
 
