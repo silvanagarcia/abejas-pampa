@@ -40,8 +40,9 @@ Controlás una **abeja pecoreadora**. El mapa es un recorte del **Monte
 pampeano** con flores de **caldén, chañar, piquillín y jarilla**. Cada especie
 da distinta cantidad de néctar y se recarga a distinto ritmo. Juntás néctar
 hasta llenar el buche y volvés a la **colmena**, donde se transforma en miel.
-La jornada dura 120 segundos y tiene un **objetivo**: cosechar una cantidad de
-gramos de miel. Al cumplirlo, el día cierra y la cosecha se sirve en
+El juego tiene **4 niveles** de 30 segundos cada uno (el tiempo justo para
+juntar la meta de cada uno): la miel se va acumulando de nivel en nivel hasta
+completar la **meta global** y ganar el juego. Ahí la cosecha se sirve en
 **tarritos listos para la venta**.
 
 Toda la información biológica y regional que sustenta el juego está en
@@ -53,12 +54,19 @@ El juego ya tiene su ciclo completo: **pantalla de inicio → jornada →
 pantalla de venta → nueva jornada**.
 
 - **Pantalla de inicio** con la explicación del objetivo y los controles.
-- **Objetivo del día**: cosechar `META_MIEL_G` gramos de miel neta (120 por
-  defecto). El HUD muestra el avance con una barra `miel del día: X / 120 g`.
-- Al alcanzar la meta (o al terminar el tiempo), pasás a la **pantalla de
-  venta**: la miel neta se reparte en **tarritos de 30 g** dibujados, con
-  resumen de gramos, tarritos y **venta estimada** en pesos.
-- `ENTER` en esa pantalla arranca una **nueva jornada**.
+- **4 niveles** definidos en `NIVELES` (30 s y una meta creciente cada uno).
+  El HUD muestra el avance del nivel (`nivel 1/4: X / 45 g`) y el **acumulado
+  global** (`total del juego: X / 240 g`).
+- Al superar un nivel pasás a una pantalla breve de **checkpoint** con el
+  acumulado, y seguís al siguiente nivel (más difícil: más avispas, viento
+  y sequía) sin perder lo juntado.
+- Al superar el **último nivel** (o llegar antes a la meta global), ganás el
+  juego y pasás a la **pantalla de venta**: la miel neta total se reparte en
+  **tarritos de 30 g** dibujados, con resumen de gramos, tarritos y **venta
+  estimada** en pesos.
+- Si se acaba el tiempo de un nivel sin llegar a su meta, termina la partida
+  ahí mismo y se muestra lo acumulado hasta ese nivel.
+- `ENTER` en la pantalla de venta arranca una **nueva partida** desde el nivel 1.
 
 ### Peligros (desde v0.2)
 
@@ -83,16 +91,19 @@ Cada mecánica sale de una amenaza documentada: ver
 Lo que sigue (sonido, día/noche, danza de la abeja, abeja nativa, ranking)
 está en [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
-## El objetivo del día
+## El objetivo del juego
 
-- **Meta:** juntar **120 g de miel neta** y llevarla a la colmena antes de que
-  se haga de noche (120 s).
-- La miel **neta** descuenta la penalización por néctar contaminado del cultivo.
-- Cuando la barra del HUD se llena, la jornada termina en éxito y ves tu
-  cosecha **en tarritos** (30 g cada uno) con la venta estimada.
-- Si se acaba el tiempo sin llegar, la pantalla de venta te muestra lo poco que
-  juntaste y te invita a probar de nuevo (`ENTER`).
-- La meta se ajusta en `META_MIEL_G` dentro de
+- **4 niveles** de **30 segundos** cada uno (Primavera, Verano, Otoño,
+  Invierno), con una meta de miel creciente y más peligros en cada uno.
+- La miel **neta** (descuenta la penalización por néctar contaminado del
+  cultivo) que juntás en un nivel se **suma** a lo acumulado en los
+  anteriores; nunca se pierde al pasar de nivel.
+- **Meta global:** juntar **240 g de miel neta** en total. Se gana apenas se
+  llega a esa cifra, o al superar el último nivel.
+- Si se acaba el tiempo de un nivel sin llegar a su meta, la partida termina
+  ahí; la pantalla de venta muestra lo acumulado hasta ese punto e invita a
+  probar de nuevo (`ENTER`) desde el nivel 1.
+- Los niveles y la meta global se ajustan en `NIVELES` dentro de
   [`src/constants/config.py`](src/constants/config.py).
 
 ## Peligros del Caldenal
@@ -136,28 +147,32 @@ python -m src.main
 
 | Tecla | Acción |
 |---|---|
-| `ENTER` / `ESPACIO` | Empezar (pantalla de inicio) · nueva jornada (pantalla de venta) |
+| `ENTER` / `ESPACIO` | Empezar (pantalla de inicio) · siguiente nivel (checkpoint) · nueva partida (pantalla de venta) |
 | ← ↑ → ↓  /  W A S D | Mover la abeja |
 | `H` | Abrir/cerrar la ayuda (**qué es cada cosa**) |
-| `R` | Reiniciar la jornada en curso |
+| `R` | Reiniciar el nivel en curso |
 | `ESC` | Salir |
 
 ## Cómo se juega
 
-1. En la **pantalla de inicio**, `ENTER` para empezar la jornada.
+1. En la **pantalla de inicio**, `ENTER` para empezar el nivel 1.
 2. Salís de la zona de la colmena y buscás flores **en el Monte** (evitá la
    franja de cultivo de la derecha).
 3. Te posás sobre una flor: el néctar pasa de la flor a tu buche.
 4. Cuando el buche está lleno (`¡LLENA!`), volvés a tocar la **colmena**. Ahí
    descargás, **recuperás energía** y **bajás la varroa**.
 5. El néctar descargado se convierte en miel (factor 0,7) y sube la barra
-   `miel del día`.
+   `nivel X/4` y la del `total del juego`.
 6. Las flores se recargan solas: conviene rotar. La **jarilla** además te
    limpia varroa.
 7. Cuidado con la **avispa** (te roba), el **benteveo** (te tira la carga) y
-   las **nubes de pesticida** (te desorientan).
-8. Al llegar a los **120 g** (o al terminar el tiempo) pasás a la **pantalla
-   de venta**: tu cosecha en tarritos. `ENTER` para otra jornada.
+   las **nubes de pesticida** (te desorientan). Todo se pone más intenso en
+   cada nivel: más avispas, más viento (mirá las **estelas** que cruzan la
+   pantalla) y más chance de sequía.
+8. Al llegar a la meta del nivel pasás a un **checkpoint** con el acumulado y
+   seguís al siguiente. Al superar el último nivel (o llegar antes a los
+   **240 g** globales) ganás y pasás a la **pantalla de venta**: tu cosecha
+   en tarritos. `ENTER` para otra partida.
 
 ## Estructura del proyecto
 

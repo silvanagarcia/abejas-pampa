@@ -8,6 +8,38 @@ import pygame
 from src.constants import config
 
 
+class RachaVisual:
+    """Una racha de viento visible: una estela que cruza la pantalla."""
+
+    def __init__(self, vector):
+        diagonal = pygame.Vector2(config.ANCHO, config.ALTO).length()
+        direccion = vector.normalize() if vector.length_squared() > 0 else pygame.Vector2(1, 0)
+        perp = pygame.Vector2(-direccion.y, direccion.x)
+        centro = pygame.Vector2(config.ANCHO / 2, config.ALTO / 2)
+        lateral = perp * random.uniform(-diagonal / 2, diagonal / 2)
+        atras = -direccion * (diagonal / 2 + 40)
+        self.pos = centro + lateral + atras
+        self.vida = random.uniform(1.0, 1.8)
+        self.edad = 0.0
+
+    def actualizar(self, dt, vector):
+        self.pos += vector * dt * config.FPS * 6   # más rápido que el empuje real: se nota
+        self.edad += dt
+
+    def viva(self):
+        return self.edad < self.vida
+
+    def dibujar(self, sup, vector):
+        if vector.length_squared() < 0.02:
+            return
+        direccion = vector.normalize()
+        largo = 16 + vector.length() * 10
+        p1 = self.pos - direccion * largo
+        prop = max(0.0, 1 - self.edad / self.vida)
+        color = tuple(int(config.CIELO[i] + (255 - config.CIELO[i]) * prop * 0.8) for i in range(3))
+        pygame.draw.line(sup, color, p1, self.pos, 2)
+
+
 class Viento:
     """Ráfaga que empuja a la abeja y cambia de dirección cada tanto."""
 
@@ -16,6 +48,8 @@ class Viento:
         self._t = 0.0
         self._proximo = random.uniform(*config.VIENTO_CAMBIA_CADA)
         self.factor = 1.0        # 1.0 normal; la sequía lo sube
+        self.rachas = []
+        self._spawn_t = 0.0
 
     def actualizar(self, dt):
         self._t += dt
@@ -26,14 +60,32 @@ class Viento:
             ang = random.uniform(0, 360)
             self.vector = pygame.Vector2(fuerza, 0).rotate(ang)
 
+        intensidad = self.vector.length() / config.VIENTO_FUERZA_MAX
+        if intensidad > 0.08:
+            self._spawn_t += dt
+            cada = max(0.05, 0.5 - intensidad * 0.4)
+            if self._spawn_t >= cada:
+                self._spawn_t = 0.0
+                self.rachas.append(RachaVisual(self.vector))
+
+        for racha in self.rachas:
+            racha.actualizar(dt, self.vector)
+        self.rachas = [r for r in self.rachas if r.viva()]
+
     def dibujar(self, sup, fuente):
+        for racha in self.rachas:
+            racha.dibujar(sup, self.vector)
+
         if self.vector.length_squared() < 0.02:
             return
         cx, cy = config.ANCHO - 130, config.ALTO - 26
-        d = self.vector.normalize() * 16
+        intensidad = self.vector.length() / config.VIENTO_FUERZA_MAX
+        largo = 14 + self.vector.length() * 8
+        d = self.vector.normalize() * largo
         pygame.draw.line(sup, config.BLANCO, (cx, cy), (cx + d.x, cy + d.y), 3)
         pygame.draw.circle(sup, config.BLANCO, (int(cx + d.x), int(cy + d.y)), 3)
-        sup.blit(fuente.render("viento", True, config.BLANCO), (cx - 60, cy - 8))
+        nivel = "suave" if intensidad < 0.4 else ("fuerte" if intensidad < 0.75 else "¡RÁFAGA!")
+        sup.blit(fuente.render(f"viento {nivel}", True, config.BLANCO), (cx - 95, cy - 8))
 
 
 class Cultivo:

@@ -102,9 +102,17 @@ AVE_VELOCIDAD = 7.5
 AVE_AVISO = 1.1              # segundos de sombra antes de la pasada
 AVE_CADA = (8, 15)          # segundos entre pasadas
 
-# --- Ronda / objetivo ---
-DURACION_RONDA = 120          # segundos de jornada
-META_MIEL_G = 120             # gramos de miel neta a cosechar en el día
+# --- Ronda / niveles / objetivo global ---
+# Cada nivel es una jornada corta y "ajustada": el tiempo alcanza justo
+# para juntar su meta si se vuela sin perder el tiempo. La miel se va
+# acumulando de nivel en nivel hasta completar la meta global del juego.
+NIVELES = [
+    {"nombre": "Primavera", "duracion": 30, "meta": 45},
+    {"nombre": "Verano",    "duracion": 30, "meta": 55},
+    {"nombre": "Otoño",     "duracion": 30, "meta": 65},
+    {"nombre": "Invierno",  "duracion": 30, "meta": 75},
+]
+META_GLOBAL_MIEL = sum(n["meta"] for n in NIVELES)   # 240 g para ganar el juego
 GRAMOS_POR_TARRO = 30         # cada tarrito de venta lleva estos gramos
 PRECIO_TARRO = 1800           # $ por tarrito (para la pantalla de venta)
 

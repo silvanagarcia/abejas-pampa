@@ -91,9 +91,10 @@ class Ave:
 
     ESPERA, AVISO, PASADA = range(3)
 
-    def __init__(self):
+    def __init__(self, factor_frecuencia=1.0):
         self.estado = Ave.ESPERA
-        self.t = random.uniform(*config.AVE_CADA)
+        self._factor = factor_frecuencia
+        self.t = random.uniform(*config.AVE_CADA) * self._factor
         self.y = 0.0
         self.dir = 1
         self.pos = pygame.Vector2(-100, -100)
@@ -126,7 +127,7 @@ class Ave:
                 self.golpeo = True
             if self.pos.x < -80 or self.pos.x > config.ANCHO + 80:
                 self.estado = Ave.ESPERA
-                self.t = random.uniform(*config.AVE_CADA)
+                self.t = random.uniform(*config.AVE_CADA) * self._factor
 
     def _rect(self):
         return pygame.Rect(self.pos.x - 16, self.y - 10, 32, 20)

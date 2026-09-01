@@ -16,8 +16,10 @@ class HUD:
         sup.blit(self.fuente.render(etiqueta, True, config.BLANCO), (x + ancho + 12, y - 1))
 
     def dibujar(self, sup, abeja, miel_neta, meta, tiempo_restante, colmena_dir,
-                sequia, aviso, sin_energia_t):
-        franja = pygame.Surface((config.ANCHO, 70), pygame.SRCALPHA)
+                sequia, aviso, sin_energia_t, nivel_idx, niveles_totales,
+                acumulado_total, meta_global):
+        alto_franja = 92
+        franja = pygame.Surface((config.ANCHO, alto_franja), pygame.SRCALPHA)
         franja.fill((0, 0, 0, 140))
         sup.blit(franja, (0, 0))
 
@@ -35,22 +37,29 @@ class HUD:
         if abeja.varroa > 1:
             self._barra(sup, 12, 48, 150, abeja.varroa_prop, config.VARROA_COLOR, "varroa")
 
-        # Avance hacia la meta del día
+        # Avance hacia la meta del NIVEL
         cx = config.ANCHO // 2
         bx, bw = cx - 140, 300
-        sup.blit(self.fuente.render(f"miel del día:  {miel_neta:.0f} / {meta:.0f} g",
-                                    True, config.BLANCO), (bx, 8))
+        nivel_txt = f"nivel {nivel_idx + 1}/{niveles_totales}:  {miel_neta:.0f} / {meta:.0f} g"
+        sup.blit(self.fuente.render(nivel_txt, True, config.BLANCO), (bx, 8))
         pygame.draw.rect(sup, (255, 255, 255), (bx, 32, bw + 4, 16), 2)
         prop = max(0.0, min(1.0, miel_neta / meta)) if meta else 0.0
         pygame.draw.rect(sup, config.BARRA_META, (bx + 2, 34, int(bw * prop), 12))
 
-        # Tiempo + sequía
+        # Acumulado hacia la meta GLOBAL del juego
+        global_txt = f"total del juego:  {acumulado_total:.0f} / {meta_global:.0f} g"
+        sup.blit(self.fuente.render(global_txt, True, (225, 225, 195)), (bx, 54))
+        prop_g = max(0.0, min(1.0, acumulado_total / meta_global)) if meta_global else 0.0
+        pygame.draw.rect(sup, (200, 200, 170), (bx, 74, bw + 4, 8), 1)
+        pygame.draw.rect(sup, (225, 225, 195), (bx + 2, 75, int(bw * prop_g), 6))
+
+        # Tiempo + sequía (columna derecha)
         seg = max(0, int(tiempo_restante))
-        sup.blit(self.fuente.render(f"{seg // 60}:{seg % 60:02d}", True, config.BLANCO),
-                 (config.ANCHO - 60, 10))
+        t_txt = self.fuente.render(f"{seg // 60}:{seg % 60:02d}", True, config.BLANCO)
+        sup.blit(t_txt, t_txt.get_rect(topright=(config.ANCHO - 12, 8)))
         if sequia:
-            sup.blit(self.fuente.render("SEQUÍA", True, (240, 200, 120)),
-                     (config.ANCHO - 130, 32))
+            s_txt = self.fuente.render("SEQUÍA", True, (240, 200, 120))
+            sup.blit(s_txt, s_txt.get_rect(topright=(config.ANCHO - 12, 30)))
 
         # Brújula a la colmena
         self._brujula(sup, abeja, colmena_dir)
@@ -58,9 +67,9 @@ class HUD:
         # Aviso efímero
         if aviso:
             txt = self.fuente.render(aviso, True, (60, 30, 10))
-            fondo = txt.get_rect(center=(config.ANCHO // 2, 92)).inflate(16, 8)
+            fondo = txt.get_rect(center=(config.ANCHO // 2, alto_franja + 14)).inflate(16, 8)
             pygame.draw.rect(sup, (255, 230, 120), fondo, border_radius=5)
-            sup.blit(txt, txt.get_rect(center=(config.ANCHO // 2, 92)))
+            sup.blit(txt, txt.get_rect(center=(config.ANCHO // 2, alto_franja + 14)))
 
         # Alerta de energía agotada
         if sin_energia_t > 0:

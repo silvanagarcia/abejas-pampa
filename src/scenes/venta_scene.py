@@ -38,15 +38,17 @@ class VentaScene:
         cx = config.ANCHO // 2
 
         exito = self.r["exito"]
-        titulo = "¡Jornada cumplida!" if exito else "Se hizo de noche"
+        titulo = self.r["motivo"] if exito else "Fin de la jornada"
         color_t = (150, 110, 30) if exito else (140, 70, 60)
         sup.blit(self.titulo_f.render(titulo, True, color_t),
                  self.titulo_f.render(titulo, True, color_t).get_rect(center=(cx, 46)))
 
         if exito:
-            msg = f"Cosechaste la meta de {config.META_MIEL_G} g. A envasar."
+            msg = f"Juntaste {self.r['miel_neta']:.0f} g en los {self.r['niveles_totales']} niveles. A envasar."
         else:
-            msg = f"Llegaste a {self.r['miel_neta']:.0f} g de los {config.META_MIEL_G} g. Probá de nuevo."
+            msg = (f"Llegaste al nivel {self.r['nivel_alcanzado']}/{self.r['niveles_totales']} "
+                   f"con {self.r['miel_neta']:.0f} g de los {config.META_GLOBAL_MIEL:.0f} g. "
+                   f"({self.r['motivo']}) Probá de nuevo.")
         sup.blit(self.sub_f.render(msg, True, (80, 65, 40)),
                  self.sub_f.render(msg, True, (80, 65, 40)).get_rect(center=(cx, 84)))
 

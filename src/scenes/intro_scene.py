@@ -46,14 +46,18 @@ class IntroScene:
             "flores nativas (caldén, chañar, piquillín, jarilla). Llevalo a la colmena:",
             "ahí se transforma en miel, recuperás energía y te sacás la varroa.",
             "",
-            f"OBJETIVO DEL DÍA:  cosechar  {config.META_MIEL_G} g de miel  para llevar a la venta.",
+            f"OBJETIVO:  superá los {len(config.NIVELES)} niveles (30 s cada uno, el tiempo justo)",
+            f"y acumulá {config.META_GLOBAL_MIEL:.0f} g de miel en total para ganar el juego.",
             "",
             "Cuidado con las avispas (te roban), el benteveo (te tira la carga) y la",
-            "deriva de pesticida del cultivo (te desorienta). El viento también molesta.",
+            "deriva de pesticida del cultivo (te desorienta). El viento también molesta,",
+            "y se pone peor en cada nivel.",
         ]
         y = 330
+        resaltar = False
         for ln in lineas:
-            col = (150, 90, 30) if ln.startswith("OBJETIVO") else (45, 40, 25)
+            resaltar = ln.startswith("OBJETIVO") or (resaltar and ln != "")
+            col = (150, 90, 30) if resaltar else (45, 40, 25)
             sup.blit(self.f.render(ln, True, col), self.f.render(ln, True, col).get_rect(center=(cx, y)))
             y += 26
 

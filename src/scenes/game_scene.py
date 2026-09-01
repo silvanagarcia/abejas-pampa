@@ -17,30 +17,45 @@ SEGUNDOS_GRACIA = 6.0   # tiempo para volver a la colmena tras quedarse sin ener
 
 
 class GameScene:
-    """Una ronda: juntar néctar y llevarlo a la colmena, sorteando peligros."""
+    """Un nivel: juntar néctar y llevarlo a la colmena, sorteando peligros.
 
-    def __init__(self):
+    La miel neta de cada nivel se suma a `progreso_previo`, que viaja de
+    nivel en nivel hasta la meta global del juego.
+    """
+
+    def __init__(self, nivel_idx=0, progreso_previo=None):
         self.hud = HUD()
         self.leyenda = Leyenda()
+        self.nivel_idx = nivel_idx
+        self.progreso_previo = progreso_previo or {"bruta": 0.0, "penal": 0.0, "neta": 0.0}
         self.reiniciar()
 
     def reiniciar(self):
+        nivel = config.NIVELES[self.nivel_idx]
+
         self.colmena = Colmena(config.ANCHO // 2, 165)
         self.abeja = Abeja(config.ANCHO // 2, config.ALTO // 2)
         self.cultivo = Cultivo()
         self.flores = generar_campo(self.colmena.rect.inflate(80, 80), self.cultivo.rect)
         self.viento = Viento()
         self.avispas = []
-        self.ave = Ave()
+        self.ave = Ave(factor_frecuencia=max(0.5, 1.0 - 0.15 * self.nivel_idx))
 
-        self.sequia = random.random() < 0.35
+        # Dificultad creciente por nivel
+        self.avispa_max = min(config.AVISPA_MAX + self.nivel_idx, 8)
+        self.avispa_desde = max(0.0, config.AVISPA_APARECE_DESDE - 0.12 * self.nivel_idx)
+
+        prob_sequia = min(0.85, 0.35 + 0.15 * self.nivel_idx)
+        self.sequia = random.random() < prob_sequia
+        self.viento.factor = 1.0 + 0.25 * self.nivel_idx
         if self.sequia:
-            self.viento.factor = 1.8
+            self.viento.factor *= 1.8
             for f in self.flores:
                 f.regen *= 0.5
 
-        self.tiempo_restante = config.DURACION_RONDA
-        self.meta = config.META_MIEL_G
+        self.duracion_nivel = nivel["duracion"]
+        self.tiempo_restante = nivel["duracion"]
+        self.meta = nivel["meta"]
         self.miel_toxica = 0.0          # néctar tóxico ya descargado
         self.sin_energia_t = 0.0
         self.terminado = False
@@ -48,7 +63,7 @@ class GameScene:
         self.aviso = ""                 # texto efímero (robo, susto, etc.)
         self._aviso_t = 0.0
         self.mostrar_leyenda = False    # se abre con H
-        self.proxima = None             # escena siguiente (venta)
+        self.proxima = None             # escena siguiente (nivel/venta)
 
     # -- ciclo de vida ------------------------------------------------
     def manejar_evento(self, evento):
@@ -66,7 +81,7 @@ class GameScene:
         self.tiempo_restante -= dt
         if self.tiempo_restante <= 0:
             self.tiempo_restante = 0
-            self._terminar("Se hizo de noche")
+            self._terminar("Se hizo de noche", exito_nivel=False)
             return
 
         self.viento.actualizar(dt)
@@ -98,9 +113,12 @@ class GameScene:
         self.abeja.dibujar(sup)
 
         self.viento.dibujar(sup, self.hud.fuente)
+        acumulado_total = self.progreso_previo["neta"] + self.miel_final()
         self.hud.dibujar(sup, self.abeja, self.miel_final(), self.meta,
                          self.tiempo_restante, self.colmena_dir(), self.sequia,
-                         self.aviso, self.sin_energia_t)
+                         self.aviso, self.sin_energia_t,
+                         self.nivel_idx, len(config.NIVELES),
+                         acumulado_total, config.META_GLOBAL_MIEL)
         self.hud.pista_ayuda(sup)
         if self.mostrar_leyenda:
             self.leyenda.dibujar(sup)
@@ -155,13 +173,13 @@ class GameScene:
             self.colmena.recibir(total)
             self.miel_toxica += toxico
             if self.miel_final() >= self.meta:
-                self._terminar("¡Alcanzaste la meta del día!")
+                self._terminar("¡Meta del nivel alcanzada!", exito_nivel=True)
 
     def _enemigos(self, dt):
-        # Aparición de chaquetas amarillas: sobre todo en el "otoño" de la ronda
-        progreso = 1 - self.tiempo_restante / config.DURACION_RONDA
-        if progreso >= config.AVISPA_APARECE_DESDE and len(self.avispas) < config.AVISPA_MAX:
-            ritmo = 0.004 + 0.02 * (progreso - config.AVISPA_APARECE_DESDE)
+        # Aparición de chaquetas amarillas: sobre todo en el "otoño" del nivel
+        progreso = 1 - self.tiempo_restante / self.duracion_nivel
+        if progreso >= self.avispa_desde and len(self.avispas) < self.avispa_max:
+            ritmo = 0.004 + 0.02 * (progreso - self.avispa_desde)
             if random.random() < ritmo:
                 self.avispas.append(Avispa())
 
@@ -179,23 +197,40 @@ class GameScene:
         if self.abeja.energia <= 0:
             self.sin_energia_t += dt
             if self.sin_energia_t >= SEGUNDOS_GRACIA:
-                self._terminar("La abeja se agotó lejos de la colmena")
+                self._terminar("La abeja se agotó lejos de la colmena", exito_nivel=False)
         else:
             self.sin_energia_t = 0.0
 
-    def _terminar(self, motivo):
+    def _terminar(self, motivo, exito_nivel):
         if self.terminado:
             return
         self.terminado = True
         self.motivo = motivo
-        neta = self.miel_final()
+
+        neta_nivel = self.miel_final()
+        bruta_total = self.progreso_previo["bruta"] + self.colmena.miel
+        penal_total = self.progreso_previo["penal"] + (self.colmena.miel - neta_nivel)
+        neta_total = self.progreso_previo["neta"] + neta_nivel
+
+        es_ultimo_nivel = self.nivel_idx >= len(config.NIVELES) - 1
+        gano_juego = exito_nivel and (es_ultimo_nivel or neta_total >= config.META_GLOBAL_MIEL)
+
+        if exito_nivel and not gano_juego:
+            # Superó el nivel pero quedan más por delante: sigue acumulando.
+            from src.scenes.nivel_scene import NivelScene
+            progreso = {"bruta": bruta_total, "penal": penal_total, "neta": neta_total}
+            self.proxima = NivelScene(self.nivel_idx, progreso, self.nivel_idx + 1)
+            return
+
         resultado = {
-            "miel_bruta": self.colmena.miel,
-            "penal": self.colmena.miel - neta,
-            "miel_neta": neta,
-            "meta": self.meta,
-            "exito": neta >= self.meta,
-            "motivo": motivo,
+            "miel_bruta": bruta_total,
+            "penal": penal_total,
+            "miel_neta": neta_total,
+            "meta": config.META_GLOBAL_MIEL,
+            "exito": gano_juego,
+            "motivo": "¡Ganaste el juego!" if gano_juego else motivo,
+            "nivel_alcanzado": self.nivel_idx + 1,
+            "niveles_totales": len(config.NIVELES),
         }
         from src.scenes.venta_scene import VentaScene
         self.proxima = VentaScene(resultado)
