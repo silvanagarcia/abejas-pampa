@@ -5,8 +5,8 @@ ajustar el juego no implique tocar la lógica.
 """
 
 # --- Ventana ---
-ANCHO = 960
-ALTO = 640
+ANCHO = 1200
+ALTO = 800
 FPS = 60
 TITULO = "Abejas de la Pampa"
 
@@ -78,7 +78,7 @@ NECTAR_A_MIEL = 0.7
 # Franja al costado del mapa. El néctar de sus flores suma miel pero
 # "envenena" la colonia (penalización final). La nube de deriva causa un
 # efecto SUBLETAL: no mata, pero desorienta.
-CULTIVO_ANCHO = 150
+CULTIVO_ANCHO = 188
 PESTICIDA_RADIO = 56
 PESTICIDA_VELOCIDAD = 0.7      # px/frame, deriva lenta
 SUBLETAL_DURACION = 4.0        # segundos de desorientación

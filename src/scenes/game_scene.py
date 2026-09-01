@@ -33,7 +33,7 @@ class GameScene:
     def reiniciar(self):
         nivel = config.NIVELES[self.nivel_idx]
 
-        self.colmena = Colmena(config.ANCHO // 2, 165)
+        self.colmena = Colmena(config.ANCHO // 2, 206)
         self.abeja = Abeja(config.ANCHO // 2, config.ALTO // 2)
         self.cultivo = Cultivo()
         self.flores = generar_campo(self.colmena.rect.inflate(80, 80), self.cultivo.rect)
@@ -243,4 +243,4 @@ class GameScene:
 
     def _fondo(self, sup):
         sup.fill(config.CIELO)
-        pygame.draw.rect(sup, config.PASTIZAL, (0, 120, config.ANCHO, config.ALTO - 120))
+        pygame.draw.rect(sup, config.PASTIZAL, (0, 150, config.ANCHO, config.ALTO - 150))

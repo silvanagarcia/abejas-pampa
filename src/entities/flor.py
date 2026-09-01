@@ -69,7 +69,7 @@ def generar_campo(evitar_rect, cultivo_rect):
     """Devuelve la lista de flores: nativas en el Monte + tóxicas en el cultivo."""
     especies = list(config.FLORES.keys())
     flores = []
-    margen = 60
+    margen = 75
 
     def libre(x, y):
         c = pygame.Rect(x - 40, y - 40, 80, 80)
